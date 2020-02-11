@@ -11,9 +11,6 @@ var all_langs = [
     ["hi", "हिन्दी", "Hindi", "130 000"],
 ];
 
-var all_langs_short = [];
-for (var i = 0; i < all_langs.length; i++) all_langs_short.push(all_langs[i][0]);
-
 function PopulateDropDownList() {
  
      var languageselect = document.getElementById("languageselect");

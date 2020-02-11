@@ -4,8 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-
   <title>Wiki Search</title>
   <meta name="description" content="Wiki Search">
   <meta name="author" content="Rajesh Dhiman">
@@ -17,7 +15,10 @@
 <body>
   <div class="container">
     <div class="inner">
+    <label form="searchbox"> Article Title</label>
     <input type="text" id="searchbox" placeholder="search"></input>
+    <br/>
+    <label for="languageselect"> Language</label>
     <select id="languageselect" onchange="getData();">
     </select>
     <button type="button" onclick="getData()">Fetch</button>
