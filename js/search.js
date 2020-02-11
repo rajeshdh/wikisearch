@@ -3,95 +3,98 @@ function searchWikipedia(lang, title) {
     var url = `https://${lang}.wikipedia.org/api/rest_v1/page/metadata/${title}`;
     var webUrl = `https://${lang}.wikipedia.org/wiki/${title}`;
 
-    // var params = {
-    //     action: "query",
-    //     prop: 'extracts',
-    //     titles: "Douglas MacArthur",
-    //     format: "json"
-    // };
-
     url = url + "?redirect=false";
-    // Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
 
+   fetchData(url, webUrl);
+}
+function fetchData(url, webUrl){
     fetch(url)
-        .then(function (response) {
+    .then(function (response) {
+        if(response.status != 404){
             return response.json();
-        })
-        .then(function (response) {
-            console.log(response)
-            let toc = response.toc.entries;
+        } else {
+            throw new Error('No results found.')
+        }
+    })
+    .then(function (response) {
+        let toc = response.toc.entries;
+        createToc(toc, webUrl);
 
-            let topUL = createUl();
-            let ulStack = []
-            ulStack.push(topUL);
+    })
+    .catch(function (error) {
+        alert(error);
+        console.log(error);
+    });
+}
 
-            toc.forEach((element, index) => {
 
-                let currentLevel = element.level;
-                let prev = getPrevious(index, toc);
-                let prevLevel = prev ? prev.level : 0;
+function createToc(toc, webUrl){
+    let topUL = createUl();
+    let ulStack = []
+    ulStack.push(topUL);
 
-                if (currentLevel == 1) {
-                    // create top level list
-                    let li = createLiChild(element, topUL, webUrl);
-                    ulStack.push(li);
+    toc.forEach((element, index) => {
 
-                } else {
-                    let currentParent = ulStack[ulStack.length - 1] || null;
+        let currentLevel = element.level;
+        let prev = getPrevious(index, toc);
+        let prevLevel = prev ? prev.level : 0;
 
-                    if (currentLevel > prevLevel) {
-                        if (prevLevel != 0) {
+        if (currentLevel == 1) {
+            // create top level list
+            let li = createLiChild(element, topUL, webUrl);
+            ulStack.push(li);
 
-                            if (currentParent.tagName == 'LI') {
-                                // create an ul first
-                                let ul = createUl(element)
-                                currentParent.appendChild(ul);
-                                ulStack.push(ul);
-                                currentParent = ulStack[ulStack.length - 1] || null;
+        } else {
+            let currentParent = ulStack[ulStack.length - 1] || null;
 
-                            } else {
-                                createLi(element);
-                                let ul = createUl(element)
-                                currentParent.appendChild(ul);
-                                ulStack.push(ul);
-                                currentParent = ulStack[ulStack.length - 1] || null;
-                            }
+            if (currentLevel > prevLevel) {
+                if (prevLevel != 0) {
 
-                            createLiChild(element, currentParent, webUrl)
-
-                        }
-                    }
-                    if (currentLevel == prevLevel) {
-                        // sibling
-
-                        createLiChild(element, currentParent, webUrl)
-                    }
-                    if (currentLevel < prevLevel) {
-                        // next
-                        ulStack.pop();
+                    if (currentParent.tagName == 'LI') {
+                        // create an ul first
+                        let ul = createUl(element)
+                        currentParent.appendChild(ul);
+                        ulStack.push(ul);
                         currentParent = ulStack[ulStack.length - 1] || null;
-                        if (currentParent.tagName == 'LI') {
-                            // create an ul first
-                            let ul = createUl(element)
-                            currentParent.appendChild(ul);
-                            ulStack.push(ul);
-                            currentParent = ulStack[ulStack.length - 1] || null;
 
-                        }
-                        createLiChild(element, currentParent, webUrl)
-                        // console.log(element.number, currentParent)
+                    } else {
+                        createLi(element);
+                        let ul = createUl(element)
+                        currentParent.appendChild(ul);
+                        ulStack.push(ul);
+                        currentParent = ulStack[ulStack.length - 1] || null;
                     }
+
+                    createLiChild(element, currentParent, webUrl)
 
                 }
+            }
+            if (currentLevel == prevLevel) {
+                // sibling
 
-            })
+                createLiChild(element, currentParent, webUrl)
+            }
+            if (currentLevel < prevLevel) {
+                // next
+                ulStack.pop();
+                currentParent = ulStack[ulStack.length - 1] || null;
+                if (currentParent.tagName == 'LI') {
+                    // create an ul first
+                    let ul = createUl(element)
+                    currentParent.appendChild(ul);
+                    ulStack.push(ul);
+                    currentParent = ulStack[ulStack.length - 1] || null;
 
-            document.body.appendChild(topUL)
+                }
+                createLiChild(element, currentParent, webUrl)
+                // console.log(element.number, currentParent)
+            }
 
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        }
+
+    })
+
+    document.body.appendChild(topUL)
 }
 
 function getPrevious(index, arr) {
@@ -134,7 +137,7 @@ function getData() {
     title = encodeURIComponent(title.trim());
     let lang = document.getElementById('languageselect').value;
     if (lang && title) {
-        console.log(lang, title);
+        // console.log(lang, title);
         searchWikipedia(lang, title);
     }
 
