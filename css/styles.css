@@ -1,0 +1,19 @@
+.container{
+    width:100%;
+}
+/* Use a media query */
+  @media only screen and (max-width:760px), (min-width:768px) and (max-width:1024px) {
+      select{
+          width:80%;
+      }
+      .container {
+        width:100%; /* The width is 100%, when the viewport is 800px or smaller */
+      }
+      input{
+          width: 77%;
+      }
+      .inner{
+          width: 80%;
+          margin: 0 auto;
+      }
+  }

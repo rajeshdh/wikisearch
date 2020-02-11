@@ -3,6 +3,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
 
   <title>Wiki Search</title>
   <meta name="description" content="Wiki Search">
@@ -13,11 +15,18 @@
 </head>
 
 <body>
-    <input type="text" id="searchbox" ></input>
-
+  <div class="container">
+    <div class="inner">
+    <input type="text" id="searchbox" placeholder="search"></input>
+    <select id="languageselect">
+    </select>
+    <button type="button" onclick="getData()">Fetch</button>
+    </div>
     <div id="toc">
       
     </div>
+    </div>
+   <script src="js/main.js"></script>
   <script src="js/search.js"></script>
 </body>
 </html>
